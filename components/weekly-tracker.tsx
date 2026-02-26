@@ -13,6 +13,14 @@ interface WeekEarnings {
   [weekId: string]: number
 }
 
+interface EarningsPayload {
+  userId: string
+  weekId: string
+  amount: number
+  startDate: string
+  endDate: string
+}
+
 const getDefaultDateRange = () => {
   const end = new Date()
   end.setHours(0, 0, 0, 0)
@@ -30,6 +38,7 @@ export default function WeeklyTracker() {
   const [endDate, setEndDate] = useState<Date>(initialRange.end)
   const [earnings, setEarnings] = useState<WeekEarnings>({})
   const [isLoading, setIsLoading] = useState(true)
+  const pendingKey = `pendingEarnings_${currentUser.userId}`
 
   const weeks = useMemo(() => generateWeeksFromRange(startDate, endDate), [startDate, endDate])
 
@@ -64,6 +73,76 @@ export default function WeeklyTracker() {
     fetchEarnings()
   }, [currentUser.userId])
 
+  const saveEarningToApi = async (payload: EarningsPayload): Promise<"ok" | "network" | "server"> => {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await fetch('/api/earnings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+
+        if (response.ok) return "ok"
+        if (response.status >= 500) {
+          await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)))
+          continue
+        }
+        return "server"
+      } catch {
+        await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)))
+      }
+    }
+
+    return "network"
+  }
+
+  const queuePendingSave = (payload: EarningsPayload) => {
+    try {
+      const existing = localStorage.getItem(pendingKey)
+      const queue: EarningsPayload[] = existing ? JSON.parse(existing) : []
+      queue.push(payload)
+      localStorage.setItem(pendingKey, JSON.stringify(queue))
+    } catch {
+      // Ignore local queue failures to keep input responsive.
+    }
+  }
+
+  const flushPendingSaves = async () => {
+    try {
+      const existing = localStorage.getItem(pendingKey)
+      if (!existing) return
+
+      const queue: EarningsPayload[] = JSON.parse(existing)
+      if (!Array.isArray(queue) || queue.length === 0) return
+
+      const remaining: EarningsPayload[] = []
+      for (const payload of queue) {
+        const result = await saveEarningToApi(payload)
+        if (result !== "ok") {
+          remaining.push(payload)
+        }
+      }
+
+      if (remaining.length > 0) {
+        localStorage.setItem(pendingKey, JSON.stringify(remaining))
+      } else {
+        localStorage.removeItem(pendingKey)
+      }
+    } catch {
+      // Ignore sync failures and retry on next online/user change.
+    }
+  }
+
+  useEffect(() => {
+    void flushPendingSaves()
+
+    const handleOnline = () => {
+      void flushPendingSaves()
+    }
+    window.addEventListener("online", handleOnline)
+    return () => window.removeEventListener("online", handleOnline)
+  }, [pendingKey])
+
   const handleEarningChange = async (weekId: string, value: number) => {
     const previousValue = earnings[weekId] || 0
 
@@ -77,30 +156,28 @@ export default function WeeklyTracker() {
     const week = weeks.find((w) => w.id === weekId)
     if (!week) return
 
-    // Persist to database
-    try {
-      const response = await fetch('/api/earnings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUser.userId,
-          weekId,
-          amount: value,
-          startDate: week.startDate.toISOString(),
-          endDate: week.endDate.toISOString(),
-        }),
-      })
+    const payload: EarningsPayload = {
+      userId: currentUser.userId,
+      weekId,
+      amount: value,
+      startDate: week.startDate.toISOString(),
+      endDate: week.endDate.toISOString(),
+    }
 
-      if (!response.ok) {
-        throw new Error("Save failed")
-      }
-    } catch (error) {
-      console.error('Failed to save earnings:', error)
+    const result = await saveEarningToApi(payload)
+
+    if (result === "server") {
       setEarnings((prev) => ({
         ...prev,
         [weekId]: previousValue,
       }))
-      toast.error("Could not save earnings")
+      toast.error("Could not save earnings right now")
+      return
+    }
+
+    if (result === "network") {
+      queuePendingSave(payload)
+      toast.message("Saved locally. Will sync automatically.")
     }
   }
 
