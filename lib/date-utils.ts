@@ -8,26 +8,30 @@ export interface Week {
 
 export function generateWeeksFromRange(startDate: Date, endDate: Date): Week[] {
   const weeks: Week[] = []
+  if (startDate > endDate) return weeks
 
-  // Find the first Monday on or after startDate
-  const firstMonday = new Date(startDate)
-  const dayOfWeek = firstMonday.getDay()
-  const daysUntilMonday = dayOfWeek === 0 ? 1 : dayOfWeek === 1 ? 0 : 8 - dayOfWeek
-  firstMonday.setDate(firstMonday.getDate() + daysUntilMonday)
+  const rangeStart = new Date(startDate)
+  rangeStart.setHours(0, 0, 0, 0)
+  const rangeEnd = new Date(endDate)
+  rangeEnd.setHours(0, 0, 0, 0)
 
-  const currentMonday = new Date(firstMonday)
+  const makeDateKey = (date: Date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+
+  let currentStart = new Date(rangeStart)
   let weekNumber = 1
 
-  while (currentMonday <= endDate) {
-    const weekEnd = new Date(currentMonday)
-    weekEnd.setDate(weekEnd.getDate() + 6)
+  while (currentStart <= rangeEnd) {
+    const weekEnd = new Date(currentStart)
+    const dayOfWeek = weekEnd.getDay() // 0 = Sun ... 6 = Sat
+    const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+    weekEnd.setDate(weekEnd.getDate() + daysUntilSunday)
 
-    // If week extends beyond end date, cap it
-    const actualEnd = weekEnd > endDate ? endDate : weekEnd
+    const actualEnd = weekEnd > rangeEnd ? new Date(rangeEnd) : weekEnd
 
-    const startMonth = currentMonday.toLocaleDateString("en-US", { month: "short" })
+    const startMonth = currentStart.toLocaleDateString("en-US", { month: "short" })
     const endMonth = actualEnd.toLocaleDateString("en-US", { month: "short" })
-    const startDay = currentMonday.getDate()
+    const startDay = currentStart.getDate()
     const endDay = actualEnd.getDate()
 
     const label =
@@ -36,15 +40,15 @@ export function generateWeeksFromRange(startDate: Date, endDate: Date): Week[] {
         : `${startMonth} ${startDay} – ${endMonth} ${endDay}`
 
     weeks.push({
-      id: `week-${currentMonday.getTime()}`,
+      id: `week-${makeDateKey(currentStart)}`,
       weekNumber,
-      startDate: new Date(currentMonday),
+      startDate: new Date(currentStart),
       endDate: actualEnd,
       label,
     })
 
-    // Move to next Monday
-    currentMonday.setDate(currentMonday.getDate() + 7)
+    currentStart = new Date(actualEnd)
+    currentStart.setDate(currentStart.getDate() + 1)
     weekNumber++
   }
 

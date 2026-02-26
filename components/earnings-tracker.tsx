@@ -7,6 +7,7 @@ import SprintHistoryView from "./sprint-history-view"
 import GlobalExecutionTracker from "./global-execution-tracker"
 import type { Sprint } from "@/lib/sprint-utils"
 import { useUser } from "@/contexts/UserContext"
+import { toast } from "sonner"
 
 type Tab = "earnings" | "sprint" | "history"
 
@@ -79,16 +80,23 @@ export default function EarningsTracker() {
 
   const persistSprint = async (sprint: Sprint) => {
     try {
-      await fetch('/api/sprints', {
+      const response = await fetch('/api/sprints', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sprintId: sprint.id,
+          userId: currentUser.userId,
           updates: sprint,
         }),
       })
+
+      if (!response.ok) {
+        return false
+      }
+      return true
     } catch (error) {
       console.error('Failed to persist sprint:', error)
+      return false
     }
   }
 
@@ -115,9 +123,13 @@ export default function EarningsTracker() {
       if (response.ok) {
         const data = await response.json()
         setActiveSprint(data.sprint)
+      } else {
+        const data = await response.json().catch(() => ({}))
+        toast.error(data.error || "Failed to create sprint")
       }
     } catch (error) {
       console.error('Failed to create sprint:', error)
+      toast.error("Failed to create sprint")
     }
   }
 
@@ -131,7 +143,12 @@ export default function EarningsTracker() {
     }
 
     setActiveSprint(updated)
-    persistSprint(updated)
+    void persistSprint(updated).then((ok) => {
+      if (!ok) {
+        setActiveSprint(activeSprint)
+        toast.error("Could not save completion status")
+      }
+    })
   }
 
   const handleToggleSecondaryGoal = (goalId: string) => {
@@ -145,7 +162,12 @@ export default function EarningsTracker() {
     }
 
     setActiveSprint(updated)
-    persistSprint(updated)
+    void persistSprint(updated).then((ok) => {
+      if (!ok) {
+        setActiveSprint(activeSprint)
+        toast.error("Could not save secondary goal update")
+      }
+    })
   }
 
   const handleUpdateLog = (dayIndex: number, log: string) => {
@@ -160,7 +182,12 @@ export default function EarningsTracker() {
     }
 
     setActiveSprint(updated)
-    persistSprint(updated)
+    void persistSprint(updated).then((ok) => {
+      if (!ok) {
+        setActiveSprint(activeSprint)
+        toast.error("Could not save daily log")
+      }
+    })
   }
 
   const handleToggleExecution = (dayIndex: number) => {
@@ -175,7 +202,12 @@ export default function EarningsTracker() {
     }
 
     setActiveSprint(updated)
-    persistSprint(updated)
+    void persistSprint(updated).then((ok) => {
+      if (!ok) {
+        setActiveSprint(activeSprint)
+        toast.error("Could not save execution status")
+      }
+    })
   }
 
   const handleDailySync = () => {
@@ -194,7 +226,12 @@ export default function EarningsTracker() {
     }
 
     setActiveSprint(updated)
-    persistSprint(updated)
+    void persistSprint(updated).then((ok) => {
+      if (!ok) {
+        setActiveSprint(activeSprint)
+        toast.error("Could not save daily check-in")
+      }
+    })
   }
 
   const handleStopSprint = async (completed: boolean) => {
@@ -214,7 +251,11 @@ export default function EarningsTracker() {
     }
 
     // Persist the terminated sprint
-    await persistSprint(finalSprint)
+    const saved = await persistSprint(finalSprint)
+    if (!saved) {
+      toast.error("Could not close sprint")
+      return
+    }
 
     setSprintHistory((prev) => [finalSprint, ...prev])
 
@@ -232,7 +273,11 @@ export default function EarningsTracker() {
       }
 
       // Persist the terminated sprint
-      await persistSprint(finalSprint)
+      const saved = await persistSprint(finalSprint)
+      if (!saved) {
+        toast.error("Could not archive current sprint")
+        return
+      }
 
       setSprintHistory((prev) => [finalSprint, ...prev])
     }
@@ -244,7 +289,7 @@ export default function EarningsTracker() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="border border-border rounded-lg overflow-hidden bg-card p-6">
+        <div className="glass-surface rounded-2xl overflow-hidden p-6">
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -262,37 +307,37 @@ export default function EarningsTracker() {
         />
       </div>
 
-      <div className="border border-border rounded-lg overflow-hidden bg-card">
-        <div className="border-b border-border bg-muted/20">
-          <div className="flex">
+      <div className="glass-surface glass-highlight rounded-2xl overflow-hidden">
+        <div className="border-b border-border/80 bg-muted/25 backdrop-blur-sm">
+          <div className="flex p-2 gap-2 overflow-x-auto">
             <button
               type="button"
               onClick={() => setActiveTab("earnings")}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-colors relative ${activeTab === "earnings"
-                ? "text-foreground bg-card"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              className={`shrink-0 sm:flex-1 min-w-[132px] px-4 sm:px-6 py-3 text-sm font-medium transition-colors relative rounded-xl ${activeTab === "earnings"
+                ? "text-foreground glass-surface"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/35"
                 }`}
             >
               Weekly Earnings
-              {activeTab === "earnings" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
+              {activeTab === "earnings" && <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-primary rounded-full" />}
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("sprint")}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-colors relative ${activeTab === "sprint"
-                ? "text-foreground bg-card"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              className={`shrink-0 sm:flex-1 min-w-[132px] px-4 sm:px-6 py-3 text-sm font-medium transition-colors relative rounded-xl ${activeTab === "sprint"
+                ? "text-foreground glass-surface"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/35"
                 }`}
             >
               Active Sprint
-              {activeTab === "sprint" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
+              {activeTab === "sprint" && <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-primary rounded-full" />}
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("history")}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-colors relative ${activeTab === "history"
-                ? "text-foreground bg-card"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              className={`shrink-0 sm:flex-1 min-w-[148px] px-4 sm:px-6 py-3 text-sm font-medium transition-colors relative rounded-xl ${activeTab === "history"
+                ? "text-foreground glass-surface"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/35"
                 }`}
             >
               Sprint History
@@ -301,7 +346,7 @@ export default function EarningsTracker() {
                   {sprintHistory.length}
                 </span>
               )}
-              {activeTab === "history" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
+              {activeTab === "history" && <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-primary rounded-full" />}
             </button>
           </div>
         </div>

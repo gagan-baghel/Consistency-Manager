@@ -19,25 +19,33 @@ export default function DateRangeSelector({
   onEndDateChange,
 }: DateRangeSelectorProps) {
   const formatDateForInput = (date: Date) => {
-    return date.toISOString().split("T")[0]
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, "0")
+    const day = String(date.getDate()).padStart(2, "0")
+    return `${year}-${month}-${day}`
+  }
+
+  const parseDateInput = (value: string) => {
+    const [year, month, day] = value.split("-").map(Number)
+    return new Date(year, month - 1, day)
   }
 
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newStart = new Date(e.target.value)
+    const newStart = parseDateInput(e.target.value)
     if (newStart <= endDate) {
       onStartDateChange(newStart)
     }
   }
 
   const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEnd = new Date(e.target.value)
+    const newEnd = parseDateInput(e.target.value)
     if (newEnd >= startDate) {
       onEndDateChange(newEnd)
     }
   }
 
   return (
-    <div className="flex items-center gap-2 text-xs">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs w-full sm:w-auto">
       <div className="flex items-center gap-1.5">
         <Label
           htmlFor="start-date"
@@ -50,10 +58,10 @@ export default function DateRangeSelector({
           type="date"
           value={formatDateForInput(startDate)}
           onChange={handleStartChange}
-          className="h-8 text-xs w-[130px]"
+          className="h-8 text-xs w-full sm:w-[130px] glass-pill"
         />
       </div>
-      <span className="text-muted-foreground/40">→</span>
+      <span className="text-muted-foreground/40 hidden sm:inline">→</span>
       <div className="flex items-center gap-1.5">
         <Label
           htmlFor="end-date"
@@ -66,7 +74,7 @@ export default function DateRangeSelector({
           type="date"
           value={formatDateForInput(endDate)}
           onChange={handleEndChange}
-          className="h-8 text-xs w-[130px]"
+          className="h-8 text-xs w-full sm:w-[130px] glass-pill"
         />
       </div>
     </div>

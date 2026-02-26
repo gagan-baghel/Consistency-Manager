@@ -79,7 +79,7 @@ export default function SprintHistoryView({ sprints }: SprintHistoryViewProps) {
           return (
             <div
               key={sprint.id}
-              className={`border rounded-lg overflow-hidden ${isFailed ? "border-destructive/40 bg-destructive/5" : "border-border bg-card"
+              className={`border rounded-2xl overflow-hidden ${isFailed ? "border-destructive/40 bg-destructive/5" : "glass-surface border-border"
                 }`}
             >
               <button
@@ -186,7 +186,7 @@ export default function SprintHistoryView({ sprints }: SprintHistoryViewProps) {
                         return (
                           <div
                             key={i}
-                            className={`h-8 flex-1 rounded-sm ${executed ? "bg-primary" : "bg-muted border border-border"
+                            className={`h-8 flex-1 rounded-md ${executed ? "bg-primary" : "bg-muted border border-border"
                               }`}
                             title={`Day ${i + 1}: ${executed ? "Executed" : "Skipped"}`}
                           />
@@ -208,7 +208,7 @@ export default function SprintHistoryView({ sprints }: SprintHistoryViewProps) {
                         {sprint.secondaryGoals.map((sg) => (
                           <div key={sg.id} className="flex items-start gap-2">
                             <div
-                              className={`mt-0.5 w-4 h-4 rounded-sm flex items-center justify-center flex-shrink-0 ${sg.completed ? "bg-primary text-primary-foreground" : "bg-muted border border-border"
+                            className={`mt-0.5 w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 ${sg.completed ? "bg-primary text-primary-foreground" : "bg-muted border border-border"
                                 }`}
                             >
                               {sg.completed && (
@@ -236,13 +236,13 @@ export default function SprintHistoryView({ sprints }: SprintHistoryViewProps) {
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                       {sprintDays.map((day) => {
-                        const log = sprint.dailyLogs[day.dayIndex]
+                        const log = sprint.dailyLogs[day.dayIndex - 1]
                         const hasLog = log && log.trim().length > 0
 
                         return (
                           <div
                             key={day.dayIndex}
-                            className={`p-3 rounded-md border text-sm ${hasLog ? "bg-card border-border" : "bg-muted/40 border-muted-foreground/20"
+                            className={`p-3 rounded-xl border text-sm ${hasLog ? "glass-surface border-border" : "bg-muted/40 border-muted-foreground/20"
                               }`}
                           >
                             <div className="flex items-center gap-2 mb-1">

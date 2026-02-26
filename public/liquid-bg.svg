@@ -1,0 +1,33 @@
+<svg width="1920" height="1280" viewBox="0 0 1920 1280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="1920" y2="1280" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6FB8FF"/>
+      <stop offset="0.42" stop-color="#4F8BF2"/>
+      <stop offset="1" stop-color="#9CD8FF"/>
+    </linearGradient>
+    <radialGradient id="orbA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(360 220) rotate(35) scale(760 460)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orbB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1470 1040) rotate(-24) scale(920 520)">
+      <stop stop-color="#8CF8FF" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#8CF8FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orbC" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1240 260) rotate(15) scale(640 400)">
+      <stop stop-color="#DFAEFF" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#DFAEFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="waveA" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFFFFF" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1280" fill="url(#base)"/>
+  <rect width="1920" height="1280" fill="url(#orbA)"/>
+  <rect width="1920" height="1280" fill="url(#orbB)"/>
+  <rect width="1920" height="1280" fill="url(#orbC)"/>
+
+  <path d="M-120 760C190 620 470 720 760 640C1030 565 1300 350 1680 460C1860 512 2060 680 2080 840V1320H-120V760Z" fill="url(#waveA)"/>
+  <path d="M-160 980C130 820 440 930 690 890C960 845 1260 690 1560 760C1750 804 1940 980 2060 1160V1320H-160V980Z" fill="white" fill-opacity="0.14"/>
+</svg>

@@ -53,11 +53,11 @@ export default function WeekInput({ week, value, onChange, isCurrent = false }: 
     // <CHANGE> Redesigned as a compact vertical grid cell with visual states
     <div
       className={`
-        flex flex-col h-28 p-3 border rounded-md transition-all
-        ${isEmpty ? "bg-muted/30 border-border/40" : "bg-card border-border"}
-        ${isCurrent ? "ring-2 ring-primary/20 border-primary/50" : ""}
+        glass-inner glass-highlight flex flex-col h-28 p-3 rounded-xl transition-all
+        ${isEmpty ? "opacity-80" : ""}
+        ${isCurrent ? "ring-2 ring-primary/30 border-primary/60" : ""}
         ${isFocused ? "ring-2 ring-primary/40 border-primary" : ""}
-        hover:border-primary/40
+        hover:border-primary/45 hover:translate-y-[-1px]
       `}
     >
       {/* Week header */}

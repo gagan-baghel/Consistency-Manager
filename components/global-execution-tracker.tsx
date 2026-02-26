@@ -96,7 +96,7 @@ export default function GlobalExecutionTracker({
       <button
         type="button"
         onClick={() => setIsExpanded(true)}
-        className="w-full bg-card border border-border rounded-lg p-4 hover:bg-muted/20 transition-colors text-left"
+        className="w-full glass-surface glass-highlight rounded-2xl p-4 hover:bg-muted/25 transition-colors text-left"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -115,14 +115,14 @@ export default function GlobalExecutionTracker({
 
   // Expanded view
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden">
+    <div className="glass-surface rounded-2xl overflow-hidden">
       {/* Header with collapse button */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-muted/10">
+      <div className="flex items-center justify-between p-4 border-b border-border/80 bg-muted/10">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handlePreviousMonth}
-            className="p-1 hover:bg-muted rounded transition-colors"
+            className="glass-orb p-1.5 hover:bg-muted/50 transition-colors"
             aria-label="Previous month"
           >
             <ChevronLeft className="h-4 w-4 text-muted-foreground" />
@@ -134,7 +134,7 @@ export default function GlobalExecutionTracker({
           <button
             type="button"
             onClick={handleNextMonth}
-            className="p-1 hover:bg-muted rounded transition-colors"
+            className="glass-orb p-1.5 hover:bg-muted/50 transition-colors"
             aria-label="Next month"
           >
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -143,7 +143,7 @@ export default function GlobalExecutionTracker({
         <button
           type="button"
           onClick={() => setIsExpanded(false)}
-          className="p-1 hover:bg-muted rounded transition-colors"
+          className="glass-orb p-1.5 hover:bg-muted/50 transition-colors"
           aria-label="Collapse"
         >
           <ChevronDown className="h-4 w-4 text-muted-foreground rotate-180" />
@@ -182,14 +182,14 @@ export default function GlobalExecutionTracker({
       )}
 
       {/* Stats */}
-      <div className="flex items-center justify-center gap-6 p-4 bg-muted/5 border-b border-border">
+      <div className="flex items-center justify-center gap-4 sm:gap-6 p-4 bg-muted/5 border-b border-border/80">
         <div className="text-center">
           <div className="text-xs font-semibold tabular-nums text-foreground">
             {executedCount}/{monthInfo.daysInMonth}
           </div>
           <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Days Executed</div>
         </div>
-        <div className="h-8 w-px bg-border" />
+        <div className="h-8 w-px bg-border shrink-0" />
         <div className="text-center">
           <div className="text-xs font-bold tabular-nums text-primary">
             {consistencyScore}%
@@ -200,7 +200,7 @@ export default function GlobalExecutionTracker({
 
       {/* Future month warning */}
       {monthInfo.isFutureMonth && (
-        <div className="mx-4 mt-4 p-3 bg-muted/30 border border-border/50 rounded-md">
+        <div className="mx-4 mt-4 p-3 glass-surface rounded-xl">
           <p className="text-xs text-muted-foreground text-center">
             Future months are view-only. You can track execution starting from this month.
           </p>
@@ -209,7 +209,7 @@ export default function GlobalExecutionTracker({
 
       {/* Calendar Grid */}
       <div className="p-4">
-        <div className="grid grid-cols-15 gap-2">
+        <div className="grid [grid-template-columns:repeat(7,minmax(0,1fr))] sm:[grid-template-columns:repeat(10,minmax(0,1fr))] lg:[grid-template-columns:repeat(15,minmax(0,1fr))] gap-2">
           {Array.from({ length: monthInfo.daysInMonth }, (_, index) => {
             const dayNumber = index + 1
             const isExecuted = executionData[dayNumber] || false
@@ -219,11 +219,11 @@ export default function GlobalExecutionTracker({
             return (
               <div
                 key={dayNumber}
-                className={`relative flex flex-col items-center p-2 rounded-md border transition-all ${isExecuted
-                  ? "bg-primary/10 border-primary/40"
+                className={`relative glass-highlight flex flex-col items-center p-2 rounded-xl border transition-all ${isExecuted
+                  ? "bg-primary/15 border-primary/45"
                   : isFuture
                     ? "bg-muted/5 border-border/50 opacity-50"
-                    : "bg-muted/10 border-border hover:border-primary/20"
+                    : "bg-muted/10 border-border/80 hover:border-primary/30"
                   } ${isToday ? "ring-2 ring-primary/30" : ""}`}
               >
                 <span className={`text-[10px] font-bold mb-1.5 ${isToday ? "text-primary" : "text-muted-foreground"}`}>

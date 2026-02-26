@@ -2,6 +2,32 @@ import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Sprint from '@/lib/models/Sprint'
 
+const VALID_USERS = ['Pal', 'gagan'] as const
+
+function isValidUserId(userId: string | null): userId is (typeof VALID_USERS)[number] {
+    return !!userId && VALID_USERS.includes(userId as (typeof VALID_USERS)[number])
+}
+
+function serializeSprint(sprint: any) {
+    const sprintObj = sprint.toObject()
+    return {
+        ...sprintObj,
+        id: sprintObj.sprintId,
+        dailyLogs:
+            sprintObj.dailyLogs instanceof Map
+                ? Object.fromEntries(sprintObj.dailyLogs)
+                : (sprintObj.dailyLogs || {}),
+        executionChecklist:
+            sprintObj.executionChecklist instanceof Map
+                ? Object.fromEntries(sprintObj.executionChecklist)
+                : (sprintObj.executionChecklist || {}),
+        dailySyncUps:
+            sprintObj.dailySyncUps instanceof Map
+                ? Object.fromEntries(sprintObj.dailySyncUps)
+                : (sprintObj.dailySyncUps || {}),
+    }
+}
+
 export async function GET(request: NextRequest) {
     try {
         await connectDB()
@@ -10,11 +36,11 @@ export async function GET(request: NextRequest) {
         const userId = searchParams.get('userId')
         const status = searchParams.get('status') // 'active' or 'all'
 
-        if (!userId) {
-            return NextResponse.json({ error: 'userId is required' }, { status: 400 })
+        if (!isValidUserId(userId)) {
+            return NextResponse.json({ error: 'Valid userId is required' }, { status: 400 })
         }
 
-        let query: any = { userId }
+        const query: { userId: string; status?: string } = { userId }
 
         if (status === 'active') {
             query.status = 'active'
@@ -23,16 +49,7 @@ export async function GET(request: NextRequest) {
         const sprints = await Sprint.find(query).sort({ createdAt: -1 })
 
         // Convert Maps to objects for JSON serialization
-        const serializedSprints = sprints.map((sprint) => {
-            const sprintObj = sprint.toObject()
-            return {
-                ...sprintObj,
-                id: sprintObj.sprintId,
-                dailyLogs: sprintObj.dailyLogs instanceof Map ? Object.fromEntries(sprintObj.dailyLogs) : (sprintObj.dailyLogs || {}),
-                executionChecklist: sprintObj.executionChecklist instanceof Map ? Object.fromEntries(sprintObj.executionChecklist) : (sprintObj.executionChecklist || {}),
-                dailySyncUps: sprintObj.dailySyncUps instanceof Map ? Object.fromEntries(sprintObj.dailySyncUps) : (sprintObj.dailySyncUps || {}),
-            }
-        })
+        const serializedSprints = sprints.map(serializeSprint)
 
         return NextResponse.json({ sprints: serializedSprints })
     } catch (error) {
@@ -48,8 +65,16 @@ export async function POST(request: NextRequest) {
         const data = await request.json()
         const { userId, goal, secondaryGoals, executionChecklist } = data
 
-        if (!userId || !goal) {
-            return NextResponse.json({ error: 'userId and goal are required' }, { status: 400 })
+        if (!isValidUserId(userId) || !goal) {
+            return NextResponse.json({ error: 'Valid userId and goal are required' }, { status: 400 })
+        }
+
+        const existingActive = await Sprint.findOne({ userId, status: 'active' })
+        if (existingActive) {
+            return NextResponse.json(
+                { error: 'An active sprint already exists for this user' },
+                { status: 409 }
+            )
         }
 
         const startDate = new Date()
@@ -79,17 +104,16 @@ export async function POST(request: NextRequest) {
 
         await sprint.save()
 
-        const sprintObj = sprint.toObject()
-        const serializedSprint = {
-            ...sprintObj,
-            id: sprintObj.sprintId,
-            dailyLogs: sprintObj.dailyLogs instanceof Map ? Object.fromEntries(sprintObj.dailyLogs) : (sprintObj.dailyLogs || {}),
-            executionChecklist: sprintObj.executionChecklist instanceof Map ? Object.fromEntries(sprintObj.executionChecklist) : (sprintObj.executionChecklist || {}),
-            dailySyncUps: sprintObj.dailySyncUps instanceof Map ? Object.fromEntries(sprintObj.dailySyncUps) : (sprintObj.dailySyncUps || {}),
-        }
+        const serializedSprint = serializeSprint(sprint)
 
         return NextResponse.json({ sprint: serializedSprint }, { status: 201 })
     } catch (error) {
+        if ((error as { code?: number })?.code === 11000) {
+            return NextResponse.json(
+                { error: 'An active sprint already exists for this user' },
+                { status: 409 }
+            )
+        }
         console.error('Error creating sprint:', error)
         return NextResponse.json({ error: 'Failed to create sprint' }, { status: 500 })
     }
@@ -100,30 +124,60 @@ export async function PUT(request: NextRequest) {
         await connectDB()
 
         const data = await request.json()
-        const { sprintId, updates } = data
+        const { sprintId, userId, updates } = data
 
-        if (!sprintId) {
-            return NextResponse.json({ error: 'sprintId is required' }, { status: 400 })
+        if (!sprintId || !isValidUserId(userId) || !updates || typeof updates !== 'object') {
+            return NextResponse.json(
+                { error: 'sprintId, valid userId, and updates are required' },
+                { status: 400 }
+            )
         }
 
-        // First, fetch the existing sprint to verify ownership
-        const existingSprint = await Sprint.findOne({ sprintId })
+        const existingSprint = await Sprint.findOne({ sprintId, userId })
 
         if (!existingSprint) {
             return NextResponse.json({ error: 'Sprint not found' }, { status: 404 })
         }
 
-        // Verify that the userId in updates matches the existing sprint's userId
-        // This prevents users from modifying other users' sprints
-        if (updates.userId && updates.userId !== existingSprint.userId) {
-            return NextResponse.json({ error: 'Unauthorized: Cannot modify another user\'s sprint' }, { status: 403 })
+        const allowedUpdateKeys = [
+            'goal',
+            'dailyLogs',
+            'secondaryGoals',
+            'executionChecklist',
+            'dailySyncUps',
+            'completed',
+            'completionStatus',
+            'status',
+            'outcome',
+            'completedAt',
+            'endedEarly',
+            'lastSyncDate',
+            'endDate',
+        ]
+
+        const safeUpdates: Record<string, unknown> = {}
+        for (const key of allowedUpdateKeys) {
+            if (key in updates) {
+                safeUpdates[key] = updates[key]
+            }
         }
 
-        // Ensure userId cannot be changed
-        const safeUpdates = { ...updates, userId: existingSprint.userId }
+        if ('completedAt' in safeUpdates && safeUpdates.completedAt) {
+            safeUpdates.completedAt = new Date(safeUpdates.completedAt as string)
+        }
+
+        if ('lastSyncDate' in safeUpdates && safeUpdates.lastSyncDate) {
+            safeUpdates.lastSyncDate = new Date(safeUpdates.lastSyncDate as string)
+        }
+
+        if ('endDate' in safeUpdates && safeUpdates.endDate) {
+            safeUpdates.endDate = new Date(safeUpdates.endDate as string)
+        }
+
+        safeUpdates.userId = existingSprint.userId
 
         const sprint = await Sprint.findOneAndUpdate(
-            { sprintId },
+            { sprintId, userId },
             { $set: safeUpdates },
             { new: true }
         )
@@ -132,17 +186,16 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: 'Sprint not found' }, { status: 404 })
         }
 
-        const sprintObj = sprint.toObject()
-        const serializedSprint = {
-            ...sprintObj,
-            id: sprintObj.sprintId,
-            dailyLogs: sprintObj.dailyLogs instanceof Map ? Object.fromEntries(sprintObj.dailyLogs) : (sprintObj.dailyLogs || {}),
-            executionChecklist: sprintObj.executionChecklist instanceof Map ? Object.fromEntries(sprintObj.executionChecklist) : (sprintObj.executionChecklist || {}),
-            dailySyncUps: sprintObj.dailySyncUps instanceof Map ? Object.fromEntries(sprintObj.dailySyncUps) : (sprintObj.dailySyncUps || {}),
-        }
+        const serializedSprint = serializeSprint(sprint)
 
         return NextResponse.json({ sprint: serializedSprint })
     } catch (error) {
+        if ((error as { code?: number })?.code === 11000) {
+            return NextResponse.json(
+                { error: 'Update conflicts with existing active sprint' },
+                { status: 409 }
+            )
+        }
         console.error('Error updating sprint:', error)
         return NextResponse.json({ error: 'Failed to update sprint' }, { status: 500 })
     }
@@ -154,12 +207,13 @@ export async function DELETE(request: NextRequest) {
 
         const { searchParams } = new URL(request.url)
         const sprintId = searchParams.get('sprintId')
+        const userId = searchParams.get('userId')
 
-        if (!sprintId) {
-            return NextResponse.json({ error: 'sprintId is required' }, { status: 400 })
+        if (!sprintId || !isValidUserId(userId)) {
+            return NextResponse.json({ error: 'sprintId and valid userId are required' }, { status: 400 })
         }
 
-        await Sprint.findOneAndDelete({ sprintId })
+        await Sprint.findOneAndDelete({ sprintId, userId })
 
         return NextResponse.json({ success: true })
     } catch (error) {

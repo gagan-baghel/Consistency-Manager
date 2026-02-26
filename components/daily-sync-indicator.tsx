@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { hasSyncedToday } from "@/lib/sprint-utils"
 
 interface DailySyncIndicatorProps {
-  lastSyncDate: Date | null
+  lastSyncDate: Date | string | null
   onSync: () => void
 }
 
@@ -13,7 +13,7 @@ export default function DailySyncIndicator({ lastSyncDate, onSync }: DailySyncIn
 
   return (
     <div
-      className={`border rounded-lg p-4 transition-colors ${synced ? "bg-primary/5 border-primary/30" : "bg-muted/20 border-border"
+      className={`glass-surface glass-highlight rounded-2xl p-4 transition-colors ${synced ? "border-primary/35" : "border-border"
         }`}
     >
       <div className="flex items-center justify-between gap-4">
@@ -27,7 +27,7 @@ export default function DailySyncIndicator({ lastSyncDate, onSync }: DailySyncIn
         </div>
         <div>
           {synced ? (
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground">
+            <div className="flex items-center justify-center w-10 h-10 glass-orb bg-primary/80 text-primary-foreground">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <title>Check</title>
                 <path

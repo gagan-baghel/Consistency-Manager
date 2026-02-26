@@ -59,12 +59,12 @@ export default function DailyExecutionLog({ sprint, onUpdateLog }: DailyExecutio
           return (
             <div
               key={day.dayNumber}
-              className={`p-3 rounded-md border text-left text-sm transition-colors ${
+              className={`p-3 rounded-xl border text-left text-sm transition-colors glass-highlight ${
                 hasLog
-                  ? "bg-card border-border hover:bg-muted/20"
+                  ? "glass-surface border-border hover:bg-muted/20"
                   : isFuture
                     ? "bg-muted/40 border-muted-foreground/20 opacity-50 cursor-not-allowed"
-                    : "bg-muted/40 border-muted-foreground/20 hover:border-border hover:bg-card"
+                    : "bg-muted/40 border-muted-foreground/20 hover:border-border hover:glass-surface"
               } ${isEditable && !isEditing ? "cursor-pointer" : ""}`}
               onClick={() => isEditable && !isEditing && handleEditDay(day.dayNumber)}
             >
@@ -104,7 +104,7 @@ export default function DailyExecutionLog({ sprint, onUpdateLog }: DailyExecutio
                   <div className="flex gap-1.5">
                     <button
                       type="button"
-                      className="h-7 flex-1 text-xs bg-primary text-primary-foreground rounded-md font-medium hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none"
+                      className="h-7 flex-1 text-xs bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none"
                       onClick={(e) => {
                         e.preventDefault()
                         handleSaveLog(day.dayNumber)
@@ -115,7 +115,7 @@ export default function DailyExecutionLog({ sprint, onUpdateLog }: DailyExecutio
                     </button>
                     <button
                       type="button"
-                      className="h-7 flex-1 text-xs bg-muted text-muted-foreground rounded-md font-medium hover:bg-muted/80"
+                      className="h-7 flex-1 text-xs glass-surface rounded-lg font-medium hover:bg-muted/80"
                       onClick={(e) => {
                         e.preventDefault()
                         handleCancelEdit()

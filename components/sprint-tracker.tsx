@@ -82,6 +82,7 @@ export default function SprintTracker({
           onToggleComplete={onToggleComplete}
           onToggleSecondaryGoal={onToggleSecondaryGoal}
           onUpdateLog={onUpdateLog}
+          onToggleExecution={onToggleExecution}
           onDailySync={onDailySync}
           onStopSprint={onStopSprint}
         />

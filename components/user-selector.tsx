@@ -15,8 +15,8 @@ export default function UserSelector() {
     const otherUserName = otherUserId === 'Pal' ? 'Pal' : 'Gagan'
 
     return (
-        <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20">
+        <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-surface">
                 <User className="h-4 w-4 text-primary" />
                 <span className="text-sm font-medium text-foreground">{currentUser.name}</span>
             </div>
@@ -24,7 +24,7 @@ export default function UserSelector() {
                 variant="outline"
                 size="sm"
                 onClick={() => switchUser(otherUserId)}
-                className="text-xs"
+                className="text-xs flex-1 sm:flex-none"
             >
                 Switch to {otherUserName}
             </Button>

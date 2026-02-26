@@ -93,7 +93,7 @@ export default function NewSprintForm({ onSubmit, onCancel }: NewSprintFormProps
         {secondaryGoals.length > 0 && (
           <div className="mt-3 space-y-2">
             {secondaryGoals.map((sg, index) => (
-              <div key={index} className="flex items-center gap-2 bg-muted/40 rounded-lg px-3 py-2">
+              <div key={index} className="flex items-center gap-2 glass-surface rounded-xl px-3 py-2">
                 <span className="flex-1 text-sm text-pretty">{sg}</span>
                 <Button
                   type="button"

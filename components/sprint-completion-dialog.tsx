@@ -40,7 +40,7 @@ export default function SprintCompletionDialog({
         </DialogHeader>
 
         <div className="py-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-4">
+          <div className="glass-surface glass-highlight rounded-2xl p-4 mb-4">
             <p className="text-sm font-medium text-muted-foreground mb-2 uppercase tracking-wider">Primary Goal</p>
             <p className="text-base font-semibold leading-relaxed text-pretty">{sprintGoal}</p>
           </div>

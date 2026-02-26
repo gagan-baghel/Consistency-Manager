@@ -4,15 +4,25 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { calculateTimeRemaining, formatTimeUnit, getProgressPercentage, type Sprint } from "@/lib/sprint-utils"
+import {
+  calculateTimeRemaining,
+  formatTimeUnit,
+  getCurrentDayNumber,
+  getProgressPercentage,
+  hasSyncedToday,
+  type Sprint
+} from "@/lib/sprint-utils"
 import DailyExecutionLog from "./daily-execution-log"
 import SprintCompletionDialog from "./sprint-completion-dialog"
+import ExecutionChecklist from "./execution-checklist"
+import DailySyncIndicator from "./daily-sync-indicator"
 
 interface ActiveSprintProps {
   sprint: Sprint
   onToggleComplete: () => void
   onToggleSecondaryGoal: (goalId: string) => void
   onUpdateLog: (dayIndex: number, log: string) => void
+  onToggleExecution: (dayIndex: number) => void
   onDailySync: () => void
   onStopSprint: (completed: boolean) => void
 }
@@ -22,6 +32,7 @@ export default function ActiveSprint({
   onToggleComplete,
   onToggleSecondaryGoal,
   onUpdateLog,
+  onToggleExecution,
   onDailySync,
   onStopSprint,
 }: ActiveSprintProps) {
@@ -62,6 +73,12 @@ export default function ActiveSprint({
     setShowCompletionDialog(false)
   }
 
+  const currentDayNumber = getCurrentDayNumber(sprint.startDate)
+  const currentDayIndex = currentDayNumber - 1
+  const hasTodayExecution = !!sprint.executionChecklist[currentDayIndex]
+  const hasTodayLog = !!sprint.dailyLogs[currentDayIndex]?.trim()
+  const syncedToday = hasSyncedToday(sprint.lastSyncDate)
+
   return (
     <div className="space-y-8">
 
@@ -100,7 +117,7 @@ export default function ActiveSprint({
 
       {/* Countdown Timer */}
       {!sprint.completed && sprint.completionStatus === "in-progress" && (
-        <div className="border border-border rounded-lg bg-muted/10 overflow-hidden">
+        <div className="glass-surface glass-highlight rounded-2xl overflow-hidden">
           <div className="p-4 md:p-6 text-center">
             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-4">
               {timeRemaining.isExpired ? "Time Expired" : "Sprint Remaining"}
@@ -146,9 +163,37 @@ export default function ActiveSprint({
         </div>
       )}
 
+      {sprint.completionStatus === "in-progress" && (
+        <div className="glass-surface glass-highlight rounded-2xl p-4 md:p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">
+            Daily Focus
+          </p>
+          <div className="grid gap-2 text-sm">
+            <div className="flex items-center justify-between">
+              <span>Day {currentDayNumber} execution</span>
+              <span className={hasTodayExecution ? "text-primary font-semibold" : "text-muted-foreground"}>
+                {hasTodayExecution ? "Done" : "Pending"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Day {currentDayNumber} log</span>
+              <span className={hasTodayLog ? "text-primary font-semibold" : "text-muted-foreground"}>
+                {hasTodayLog ? "Logged" : "Pending"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Daily check-in</span>
+              <span className={syncedToday ? "text-primary font-semibold" : "text-muted-foreground"}>
+                {syncedToday ? "Complete" : "Pending"}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {sprint.completionStatus !== "in-progress" && (
         <div
-          className={`border rounded-lg p-6 text-center ${sprint.completionStatus === "completed"
+          className={`border rounded-2xl p-6 text-center ${sprint.completionStatus === "completed"
             ? "bg-primary/5 border-primary/20"
             : "bg-destructive/5 border-destructive/20"
             }`}
@@ -176,7 +221,7 @@ export default function ActiveSprint({
             {sprint.secondaryGoals.map((goal) => (
               <div
                 key={goal.id}
-                className={`flex items-start gap-3 p-3 rounded-md border border-border transition-colors ${goal.completed ? "bg-muted/20 opacity-60" : "bg-card"
+                className={`glass-surface flex items-start gap-3 p-3 rounded-xl border border-border transition-colors ${goal.completed ? "opacity-60" : ""
                   }`}
               >
                 <Checkbox
@@ -198,6 +243,12 @@ export default function ActiveSprint({
           </div>
         </div>
       )}
+
+      <div className="pt-4">
+        <ExecutionChecklist sprint={sprint} onToggleExecution={onToggleExecution} />
+      </div>
+
+      <DailySyncIndicator lastSyncDate={sprint.lastSyncDate} onSync={onDailySync} />
 
       <div className="pt-4">
         <DailyExecutionLog sprint={sprint} onUpdateLog={onUpdateLog} />

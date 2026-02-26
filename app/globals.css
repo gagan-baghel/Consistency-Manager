@@ -4,25 +4,25 @@
 @custom-variant dark (&:is(.dark *));
  
 :root {
-  --background: oklch(0.98 0.01 85);
-  --foreground: oklch(0.25 0.01 265);
-  --card: oklch(1 0 0);
+  --background: oklch(0.96 0.02 205);
+  --foreground: oklch(0.24 0.03 248);
+  --card: oklch(0.98 0.02 208 / 0.4);
   --card-foreground: oklch(0.25 0.01 265);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.98 0.02 208 / 0.56);
   --popover-foreground: oklch(0.25 0.01 265);
-  --primary: oklch(0.58 0.08 175);
+  --primary: oklch(0.62 0.15 255);
   --primary-foreground: oklch(0.99 0.01 85);
-  --secondary: oklch(0.94 0.01 85);
+  --secondary: oklch(0.95 0.03 212 / 0.42);
   --secondary-foreground: oklch(0.25 0.01 265);
-  --muted: oklch(0.95 0.01 85);
+  --muted: oklch(0.95 0.03 214 / 0.38);
   --muted-foreground: oklch(0.50 0.01 265);
-  --accent: oklch(0.65 0.10 165);
+  --accent: oklch(0.7 0.1 245 / 0.75);
   --accent-foreground: oklch(0.99 0.01 85);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0.01 85);
-  --border: oklch(0.90 0.01 85);
-  --input: oklch(0.90 0.01 85);
-  --ring: oklch(0.58 0.08 175);
+  --border: oklch(0.9 0.02 224 / 0.45);
+  --input: oklch(0.9 0.02 224 / 0.45);
+  --ring: oklch(0.62 0.12 252);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -40,25 +40,25 @@
 }
  
 .dark {
-  --background: oklch(0.15 0.01 265);
-  --foreground: oklch(0.98 0.01 85);
-  --card: oklch(0.18 0.01 265);
+  --background: oklch(0.2 0.02 250);
+  --foreground: oklch(0.97 0.01 220);
+  --card: oklch(0.28 0.03 242 / 0.34);
   --card-foreground: oklch(0.98 0.01 85);
-  --popover: oklch(0.18 0.01 265);
+  --popover: oklch(0.26 0.03 242 / 0.5);
   --popover-foreground: oklch(0.98 0.01 85);
-  --primary: oklch(0.58 0.08 175);
+  --primary: oklch(0.72 0.14 256);
   --primary-foreground: oklch(0.99 0.01 85);
-  --secondary: oklch(0.25 0.01 265);
+  --secondary: oklch(0.28 0.02 250 / 0.8);
   --secondary-foreground: oklch(0.98 0.01 85);
-  --muted: oklch(0.25 0.01 265);
+  --muted: oklch(0.27 0.02 250 / 0.75);
   --muted-foreground: oklch(0.60 0.01 265);
-  --accent: oklch(0.65 0.10 165);
+  --accent: oklch(0.66 0.12 246 / 0.82);
   --accent-foreground: oklch(0.99 0.01 85);
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.99 0.01 85);
-  --border: oklch(0.25 0.01 265);
-  --input: oklch(0.25 0.01 265);
-  --ring: oklch(0.58 0.08 175);
+  --border: oklch(0.53 0.03 236 / 0.5);
+  --input: oklch(0.53 0.03 236 / 0.5);
+  --ring: oklch(0.64 0.12 252);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -121,5 +121,111 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image:
+      url("/liquid-bg.svg"),
+      linear-gradient(
+        160deg,
+        color-mix(in oklch, var(--background) 28%, transparent),
+        color-mix(in oklch, var(--background) 16%, transparent)
+      ),
+      radial-gradient(circle at 8% 10%, color-mix(in oklch, var(--accent) 30%, transparent), transparent 34%),
+      radial-gradient(circle at 90% 8%, color-mix(in oklch, var(--primary) 34%, transparent), transparent 32%);
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: cover, cover, cover, cover;
+    background-position: center center, center center, center center, center center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+  }
+}
+
+@layer utilities {
+  .glass-surface {
+    background:
+      linear-gradient(
+        155deg,
+        color-mix(in oklch, white 14%, transparent) 0%,
+        color-mix(in oklch, transparent 100%, white 0%) 32%,
+        color-mix(in oklch, white 5%, transparent) 100%
+      ),
+      color-mix(in oklch, var(--card) 34%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 72%, white 25%);
+    box-shadow:
+      0 14px 46px color-mix(in oklch, var(--foreground) 14%, transparent),
+      inset 0 1px 0 color-mix(in oklch, white 68%, transparent);
+    backdrop-filter: blur(22px) saturate(220%);
+  }
+
+  .glass-strong {
+    background:
+      linear-gradient(
+        155deg,
+        color-mix(in oklch, white 18%, transparent) 0%,
+        color-mix(in oklch, transparent 100%, white 0%) 32%,
+        color-mix(in oklch, white 7%, transparent) 100%
+      ),
+      color-mix(in oklch, var(--card) 26%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 95%, white 18%);
+    box-shadow:
+      0 14px 44px color-mix(in oklch, var(--foreground) 14%, transparent),
+      inset 0 1px 0 color-mix(in oklch, white 66%, transparent);
+    backdrop-filter: blur(28px) saturate(230%);
+  }
+
+  .glass-inner {
+    background:
+      linear-gradient(
+        155deg,
+        color-mix(in oklch, white 10%, transparent) 0%,
+        color-mix(in oklch, transparent 100%, white 0%) 38%,
+        color-mix(in oklch, white 4%, transparent) 100%
+      ),
+      color-mix(in oklch, var(--card) 22%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 60%, white 18%);
+    box-shadow:
+      0 10px 30px color-mix(in oklch, var(--foreground) 9%, transparent),
+      inset 0 1px 0 color-mix(in oklch, white 52%, transparent);
+    backdrop-filter: blur(16px) saturate(180%);
+  }
+
+  .glass-pill {
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--card) 75%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 92%, white 15%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklch, white 58%, transparent),
+      0 10px 24px color-mix(in oklch, var(--foreground) 8%, transparent);
+    backdrop-filter: blur(16px) saturate(175%);
+  }
+
+  .glass-orb {
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle at 30% 25%, color-mix(in oklch, white 42%, transparent), transparent 45%),
+      color-mix(in oklch, var(--card) 70%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 95%, white 18%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklch, white 62%, transparent),
+      0 10px 30px color-mix(in oklch, var(--foreground) 9%, transparent);
+    backdrop-filter: blur(20px) saturate(190%);
+  }
+
+  .glass-highlight {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-highlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      140deg,
+      color-mix(in oklch, white 42%, transparent) 0%,
+      transparent 30%,
+      transparent 70%,
+      color-mix(in oklch, white 16%, transparent) 100%
+    );
   }
 }

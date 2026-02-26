@@ -115,8 +115,11 @@ const SprintSchema = new Schema<ISprint>(
     }
 )
 
-// Index for finding active sprint per user
-SprintSchema.index({ userId: 1, status: 1 })
+// Enforce at most one active sprint per user.
+SprintSchema.index(
+    { userId: 1, status: 1 },
+    { unique: true, partialFilterExpression: { status: 'active' } }
+)
 
 const Sprint: Model<ISprint> = mongoose.models.Sprint || mongoose.model<ISprint>('Sprint', SprintSchema)
 

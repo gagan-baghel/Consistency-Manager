@@ -8,14 +8,14 @@ A Next.js application for tracking weekly earnings and managing 15-day sprints w
 - 🎯 **15-Day Sprint Management**: Create and manage focused sprint goals
 - 👥 **User Separation**: Complete data isolation between Pal and Gagan
 - 💾 **MongoDB Persistence**: All data persisted reliably across sessions
-- 🔄 **Real-time Sync**: Automatic data synchronization with database
+- 🔄 **Reliable Persistence**: Earnings and sprints persist in MongoDB with user-safe update rules
 - 📱 **Responsive Design**: Works seamlessly on desktop and mobile
 
 ## User Separation
 
 The application supports exactly two predefined users:
-- **Person 1**
-- **Person 2**
+- **Pal**
+- **Gagan**
 
 Each user has completely isolated data across:
 - Weekly earnings
@@ -163,8 +163,8 @@ View all your completed and terminated sprints in the "Sprint History" tab.
 ### Sprints
 - `GET /api/sprints?userId=Pal&status=active` - Fetch sprints
 - `POST /api/sprints` - Create sprint
-- `PUT /api/sprints` - Update sprint
-- `DELETE /api/sprints?sprintId=sprint-123` - Delete sprint
+- `PUT /api/sprints` - Update sprint (`sprintId`, `userId`, `updates`)
+- `DELETE /api/sprints?sprintId=sprint-123&userId=Pal` - Delete sprint
 
 ## Data Isolation
 

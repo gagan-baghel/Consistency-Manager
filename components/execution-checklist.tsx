@@ -20,7 +20,7 @@ export default function ExecutionChecklist({ sprint, onToggleExecution }: Execut
         <span className="text-xs font-medium text-muted-foreground">{executedCount}/15 days executed</span>
       </div>
 
-      <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-10 lg:grid-cols-15 gap-2">
+      <div className="grid [grid-template-columns:repeat(5,minmax(0,1fr))] sm:[grid-template-columns:repeat(8,minmax(0,1fr))] lg:[grid-template-columns:repeat(15,minmax(0,1fr))] gap-2">
         {sprintDays.map((day, index) => {
           const isExecuted = sprint.executionChecklist[index] || false
           const isEditable = day.isPast
@@ -28,11 +28,11 @@ export default function ExecutionChecklist({ sprint, onToggleExecution }: Execut
           return (
             <div
               key={index}
-              className={`relative flex flex-col items-center p-2 rounded-md border transition-colors ${!isEditable
+              className={`relative glass-highlight flex flex-col items-center p-2 rounded-xl border transition-colors ${!isEditable
                 ? "bg-muted/20 border-muted-foreground/20 opacity-50"
                 : isExecuted
-                  ? "bg-primary/10 border-primary/40"
-                  : "bg-card border-border hover:border-primary/30"
+                  ? "bg-primary/12 border-primary/40"
+                  : "glass-surface border-border hover:border-primary/30"
                 }`}
             >
               <span className="text-[10px] font-bold text-muted-foreground mb-1.5">D{day.dayNumber}</span>

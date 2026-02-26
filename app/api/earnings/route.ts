@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Earnings from '@/lib/models/Earnings'
 
+const VALID_USERS = ['Pal', 'gagan'] as const
+
+function isValidUserId(userId: string | null): userId is (typeof VALID_USERS)[number] {
+    return !!userId && VALID_USERS.includes(userId as (typeof VALID_USERS)[number])
+}
+
 export async function GET(request: NextRequest) {
     try {
         await connectDB()
@@ -9,8 +15,8 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url)
         const userId = searchParams.get('userId')
 
-        if (!userId) {
-            return NextResponse.json({ error: 'userId is required' }, { status: 400 })
+        if (!isValidUserId(userId)) {
+            return NextResponse.json({ error: 'Valid userId is required' }, { status: 400 })
         }
 
         const earnings = await Earnings.find({ userId }).sort({ startDate: 1 })
@@ -33,10 +39,11 @@ export async function POST(request: NextRequest) {
         await connectDB()
 
         const { userId, weekId, amount, startDate, endDate } = await request.json()
+        const numericAmount = Number(amount)
 
-        if (!userId || !weekId || amount === undefined) {
+        if (!isValidUserId(userId) || !weekId || amount === undefined || !Number.isFinite(numericAmount)) {
             return NextResponse.json(
-                { error: 'userId, weekId, and amount are required' },
+                { error: 'Valid userId, weekId, and numeric amount are required' },
                 { status: 400 }
             )
         }
@@ -47,7 +54,7 @@ export async function POST(request: NextRequest) {
             {
                 userId,
                 weekId,
-                amount,
+                amount: numericAmount,
                 startDate: startDate ? new Date(startDate) : new Date(),
                 endDate: endDate ? new Date(endDate) : new Date(),
             },
@@ -69,7 +76,7 @@ export async function DELETE(request: NextRequest) {
         const userId = searchParams.get('userId')
         const weekId = searchParams.get('weekId')
 
-        if (!userId || !weekId) {
+        if (!isValidUserId(userId) || !weekId) {
             return NextResponse.json({ error: 'userId and weekId are required' }, { status: 400 })
         }
 
