@@ -49,7 +49,7 @@ export default function ActiveSprint({
       if (newTimeRemaining.isExpired && !sprint.completed && sprint.completionStatus === "in-progress") {
         setShowCompletionDialog(true)
       }
-    }, 1000)
+    }, 30000)
 
     return () => clearInterval(interval)
   }, [sprint.endDate, sprint.startDate, sprint.completed, sprint.completionStatus])

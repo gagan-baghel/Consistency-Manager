@@ -50,30 +50,26 @@ export default function WeekInput({ week, value, onChange, isCurrent = false }: 
   }
 
   return (
-    // <CHANGE> Redesigned as a compact vertical grid cell with visual states
     <div
       className={`
-        glass-inner glass-highlight flex flex-col h-28 p-3 rounded-xl transition-all
-        ${isEmpty ? "opacity-80" : ""}
-        ${isCurrent ? "ring-2 ring-primary/30 border-primary/60" : ""}
-        ${isFocused ? "ring-2 ring-primary/40 border-primary" : ""}
-        hover:border-primary/45 hover:translate-y-[-1px]
+        glass-lite flex flex-col h-28 p-3 rounded-xl transition-all
+        ${isCurrent ? "ring-2 ring-primary/35 border-primary/65" : "border-border/70"}
+        ${isFocused ? "ring-2 ring-primary/45 border-primary" : ""}
+        hover:border-primary/45
       `}
     >
-      {/* Week header */}
       <div className="flex-1 mb-2">
-        <div className={`text-xs font-medium ${isEmpty ? "text-muted-foreground/60" : "text-foreground"}`}>
+        <div className="text-xs font-semibold text-foreground">
           Week {week.weekNumber}
         </div>
-        <div className={`text-[10px] leading-tight mt-0.5 ${isEmpty ? "text-muted-foreground/40" : "text-muted-foreground"}`}>
+        <div className="text-[10px] leading-tight mt-0.5 text-foreground/75">
           {week.label}
         </div>
       </div>
 
-      {/* Input area */}
       <div className="relative">
         {!isFocused && hasData && (
-          <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none text-xs text-muted-foreground">
+          <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none text-xs text-foreground/70">
             $
           </div>
         )}
@@ -87,9 +83,9 @@ export default function WeekInput({ week, value, onChange, isCurrent = false }: 
           onKeyDown={handleKeyDown}
           placeholder="—"
           className={`
-            h-8 text-sm text-right border-0 bg-transparent p-0 pr-2
+            h-9 text-sm text-right border border-border/70 bg-background/45 p-0 pr-2 font-medium text-foreground
             ${!isFocused && hasData ? "pl-5 font-medium" : "pl-2"}
-            ${isEmpty ? "placeholder:text-muted-foreground/30" : ""}
+            placeholder:text-foreground/55
           `}
         />
       </div>

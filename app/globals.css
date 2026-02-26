@@ -121,7 +121,7 @@
     box-shadow:
       0 14px 46px color-mix(in oklch, var(--foreground) 14%, transparent),
       inset 0 1px 0 color-mix(in oklch, white 68%, transparent);
-    backdrop-filter: blur(22px) saturate(220%);
+    backdrop-filter: blur(16px) saturate(180%);
   }
 
   .glass-strong {
@@ -137,7 +137,7 @@
     box-shadow:
       0 14px 44px color-mix(in oklch, var(--foreground) 14%, transparent),
       inset 0 1px 0 color-mix(in oklch, white 66%, transparent);
-    backdrop-filter: blur(28px) saturate(230%);
+    backdrop-filter: blur(20px) saturate(190%);
   }
 
   .glass-inner {
@@ -153,7 +153,15 @@
     box-shadow:
       0 10px 30px color-mix(in oklch, var(--foreground) 9%, transparent),
       inset 0 1px 0 color-mix(in oklch, white 52%, transparent);
-    backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(150%);
+  }
+
+  .glass-lite {
+    background: color-mix(in oklch, var(--card) 24%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 58%, white 14%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklch, white 44%, transparent),
+      0 4px 14px color-mix(in oklch, var(--foreground) 6%, transparent);
   }
 
   .glass-pill {

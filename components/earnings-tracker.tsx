@@ -51,16 +51,17 @@ export default function EarningsTracker() {
     const fetchSprints = async () => {
       setIsLoading(true)
       try {
-        // Fetch active sprint
-        const activeResponse = await fetch(`/api/sprints?userId=${currentUser.userId}&status=active`)
+        const [activeResponse, allResponse] = await Promise.all([
+          fetch(`/api/sprints?userId=${currentUser.userId}&status=active`),
+          fetch(`/api/sprints?userId=${currentUser.userId}`),
+        ])
+
         if (activeResponse.ok) {
           const activeData = await activeResponse.json()
           const activeSprints = activeData.sprints || []
           setActiveSprint(activeSprints.length > 0 ? activeSprints[0] : null)
         }
 
-        // Fetch all sprints for history
-        const allResponse = await fetch(`/api/sprints?userId=${currentUser.userId}`)
         if (allResponse.ok) {
           const allData = await allResponse.json()
           const allSprints = allData.sprints || []

@@ -32,7 +32,7 @@ export default function ExecutionChecklist({ sprint, onToggleExecution }: Execut
                 ? "bg-muted/20 border-muted-foreground/20 opacity-50"
                 : isExecuted
                   ? "bg-primary/12 border-primary/40"
-                  : "glass-surface border-border hover:border-primary/30"
+                  : "glass-lite border-border hover:border-primary/30"
                 }`}
             >
               <span className="text-[10px] font-bold text-muted-foreground mb-1.5">D{day.dayNumber}</span>

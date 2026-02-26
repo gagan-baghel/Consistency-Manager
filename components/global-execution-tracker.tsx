@@ -19,7 +19,10 @@ export default function GlobalExecutionTracker({
   onMonthChange,
   activeSprint
 }: GlobalExecutionTrackerProps) {
-  const today = new Date()
+  const today = useMemo(() => new Date(), [])
+  const currentYear = today.getFullYear()
+  const currentMonth = today.getMonth()
+  const currentDayOfMonth = today.getDate()
   const [selectedMonth, setSelectedMonth] = useState({ year: today.getFullYear(), month: today.getMonth() })
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -58,14 +61,14 @@ export default function GlobalExecutionTracker({
     const monthName = new Date(year, month, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
     // Check if this is the current month
-    const isCurrentMonth = year === today.getFullYear() && month === today.getMonth()
-    const currentDay = isCurrentMonth ? today.getDate() : null
+    const isCurrentMonth = year === currentYear && month === currentMonth
+    const currentDay = isCurrentMonth ? currentDayOfMonth : null
 
     // Check if this is a future month
-    const isFutureMonth = year > today.getFullYear() || (year === today.getFullYear() && month > today.getMonth())
+    const isFutureMonth = year > currentYear || (year === currentYear && month > currentMonth)
 
     return { daysInMonth, monthName, currentDay, isCurrentMonth, isFutureMonth, year, month }
-  }, [selectedMonth, today])
+  }, [selectedMonth, currentYear, currentMonth, currentDayOfMonth])
 
   const executedCount = Object.values(executionData).filter(Boolean).length
   const consistencyScore = Math.round((executedCount / monthInfo.daysInMonth) * 100)
@@ -223,7 +226,7 @@ export default function GlobalExecutionTracker({
                   ? "bg-primary/15 border-primary/45"
                   : isFuture
                     ? "bg-muted/5 border-border/50 opacity-50"
-                    : "bg-muted/10 border-border/80 hover:border-primary/30"
+                    : "glass-lite border-border/80 hover:border-primary/30"
                   } ${isToday ? "ring-2 ring-primary/30" : ""}`}
               >
                 <span className={`text-[10px] font-bold mb-1.5 ${isToday ? "text-primary" : "text-muted-foreground"}`}>

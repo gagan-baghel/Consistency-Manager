@@ -13,26 +13,21 @@ interface WeekEarnings {
   [weekId: string]: number
 }
 
-const formatLocalDate = (date: Date) => {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const day = String(date.getDate()).padStart(2, "0")
-  return `${year}-${month}-${day}`
-}
-
-const parseLocalDate = (value: string) => {
-  const [year, month, day] = value.split("-").map(Number)
-  return new Date(year, month - 1, day)
+const getDefaultDateRange = () => {
+  const end = new Date()
+  end.setHours(0, 0, 0, 0)
+  const start = new Date(end)
+  start.setDate(start.getDate() - 7)
+  return { start, end }
 }
 
 export default function WeeklyTracker() {
   const { currentUser } = useUser()
+  const initialRange = useMemo(() => getDefaultDateRange(), [])
   const today = new Date()
-  const defaultStart = new Date(today.getFullYear(), today.getMonth(), 1)
-  const defaultEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0)
 
-  const [startDate, setStartDate] = useState<Date>(defaultStart)
-  const [endDate, setEndDate] = useState<Date>(defaultEnd)
+  const [startDate, setStartDate] = useState<Date>(initialRange.start)
+  const [endDate, setEndDate] = useState<Date>(initialRange.end)
   const [earnings, setEarnings] = useState<WeekEarnings>({})
   const [isLoading, setIsLoading] = useState(true)
 
@@ -45,28 +40,6 @@ export default function WeeklyTracker() {
     })
     return currentWeek?.id
   }, [weeks, today])
-
-  // Load date range from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem(`dateRange_${currentUser.userId}`)
-    if (saved) {
-      try {
-        const { startDate: savedStart, endDate: savedEnd } = JSON.parse(saved)
-        setStartDate(parseLocalDate(savedStart))
-        setEndDate(parseLocalDate(savedEnd))
-      } catch (error) {
-        console.error('Failed to load saved date range:', error)
-      }
-    }
-  }, [currentUser.userId])
-
-  // Save date range to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem(`dateRange_${currentUser.userId}`, JSON.stringify({
-      startDate: formatLocalDate(startDate),
-      endDate: formatLocalDate(endDate)
-    }))
-  }, [startDate, endDate, currentUser.userId])
 
   // Fetch earnings from API when user changes
   useEffect(() => {

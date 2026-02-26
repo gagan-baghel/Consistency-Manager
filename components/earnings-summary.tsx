@@ -53,7 +53,7 @@ export default function EarningsSummary({ weeks, earnings }: EarningsSummaryProp
 
   return (
     <div className="space-y-6">
-      <div className="glass-inner glass-highlight rounded-2xl p-6">
+      <div className="glass-lite rounded-2xl p-6">
         <div className="flex items-baseline justify-between gap-4">
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total</span>
           <span className="text-4xl font-bold tabular-nums tracking-tight">{formatCurrency(totalEarnings)}</span>
