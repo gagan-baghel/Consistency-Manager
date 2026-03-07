@@ -131,8 +131,8 @@ export default function GlobalExecutionTracker({
             <ChevronLeft className="h-4 w-4 text-muted-foreground" />
           </button>
           <div>
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Execution Tracker</h3>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{monthInfo.monthName}</p>
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Execution Tracker</h3>
+            <p className="text-[11px] text-muted-foreground mt-0.5">{monthInfo.monthName}</p>
           </div>
           <button
             type="button"
@@ -163,21 +163,21 @@ export default function GlobalExecutionTracker({
                 <div className="text-4xl font-bold tabular-nums text-primary">
                   {timeRemaining.days}
                 </div>
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-1">Days</div>
+                <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mt-1">Days</div>
               </div>
               <div className="text-3xl font-bold text-muted-foreground/30">:</div>
               <div className="flex flex-col items-center">
                 <div className="text-4xl font-bold tabular-nums text-primary">
                   {String(timeRemaining.hours).padStart(2, '0')}
                 </div>
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-1">Hrs</div>
+                <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mt-1">Hrs</div>
               </div>
               <div className="text-3xl font-bold text-muted-foreground/30">:</div>
               <div className="flex flex-col items-center">
                 <div className="text-4xl font-bold tabular-nums text-primary">
                   {String(timeRemaining.minutes).padStart(2, '0')}
                 </div>
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-1">Min</div>
+                <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mt-1">Min</div>
               </div>
             </div>
           </div>
@@ -190,14 +190,14 @@ export default function GlobalExecutionTracker({
           <div className="text-xs font-semibold tabular-nums text-foreground">
             {executedCount}/{monthInfo.daysInMonth}
           </div>
-          <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Days Executed</div>
+          <div className="text-[11px] text-muted-foreground uppercase tracking-wider mt-0.5">Days Executed</div>
         </div>
         <div className="h-8 w-px bg-border shrink-0" />
         <div className="text-center">
           <div className="text-xs font-bold tabular-nums text-primary">
             {consistencyScore}%
           </div>
-          <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Consistency</div>
+          <div className="text-[11px] text-muted-foreground uppercase tracking-wider mt-0.5">Consistency</div>
         </div>
       </div>
 
@@ -229,7 +229,7 @@ export default function GlobalExecutionTracker({
                     : "glass-lite border-border/80 hover:border-primary/30"
                   } ${isToday ? "ring-2 ring-primary/30" : ""}`}
               >
-                <span className={`text-[10px] font-bold mb-1.5 ${isToday ? "text-primary" : "text-muted-foreground"}`}>
+                <span className={`text-[11px] font-bold mb-1.5 ${isToday ? "text-primary" : "text-muted-foreground"}`}>
                   {dayNumber}
                 </span>
                 <Checkbox

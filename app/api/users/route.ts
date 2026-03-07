@@ -9,11 +9,11 @@ export async function GET() {
         let users = await User.find({})
 
         if (users.length === 0) {
-            const Pal = new User({ userId: 'Pal', name: 'Pal' })
+            const Lucky = new User({ userId: 'Lucky', name: 'Lucky' })
             const gagan = new User({ userId: 'gagan', name: 'Gagan' })
 
-            await Promise.all([Pal.save(), gagan.save()])
-            users = [Pal, gagan]
+            await Promise.all([Lucky.save(), gagan.save()])
+            users = [Lucky, gagan]
         }
 
         return NextResponse.json({ users })

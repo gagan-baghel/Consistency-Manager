@@ -7,22 +7,22 @@
   color-scheme: light;
   --background: oklch(0.96 0.02 205);
   --foreground: oklch(0.24 0.03 248);
-  --card: oklch(0.98 0.02 208 / 0.4);
+  --card: oklch(0.98 0.02 208 / 0.72);
   --card-foreground: oklch(0.25 0.01 265);
-  --popover: oklch(0.98 0.02 208 / 0.56);
+  --popover: oklch(0.98 0.02 208 / 0.84);
   --popover-foreground: oklch(0.25 0.01 265);
   --primary: oklch(0.62 0.15 255);
   --primary-foreground: oklch(0.99 0.01 85);
-  --secondary: oklch(0.95 0.03 212 / 0.42);
+  --secondary: oklch(0.95 0.03 212 / 0.62);
   --secondary-foreground: oklch(0.25 0.01 265);
-  --muted: oklch(0.95 0.03 214 / 0.38);
-  --muted-foreground: oklch(0.50 0.01 265);
+  --muted: oklch(0.95 0.03 214 / 0.58);
+  --muted-foreground: oklch(0.41 0.01 265);
   --accent: oklch(0.7 0.1 245 / 0.75);
   --accent-foreground: oklch(0.99 0.01 85);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0.01 85);
-  --border: oklch(0.9 0.02 224 / 0.45);
-  --input: oklch(0.9 0.02 224 / 0.45);
+  --border: oklch(0.88 0.02 224 / 0.78);
+  --input: oklch(0.88 0.02 224 / 0.78);
   --ring: oklch(0.62 0.12 252);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -93,8 +93,8 @@
       url("/liquid-bg.svg"),
       linear-gradient(
         160deg,
-        color-mix(in oklch, var(--background) 28%, transparent),
-        color-mix(in oklch, var(--background) 16%, transparent)
+        color-mix(in oklch, var(--background) 52%, transparent),
+        color-mix(in oklch, var(--background) 40%, transparent)
       ),
       radial-gradient(circle at 8% 10%, color-mix(in oklch, var(--accent) 30%, transparent), transparent 34%),
       radial-gradient(circle at 90% 8%, color-mix(in oklch, var(--primary) 34%, transparent), transparent 32%);
@@ -102,8 +102,27 @@
     background-size: cover, cover, cover, cover;
     background-position: center center, center center, center center, center center;
     background-attachment: fixed;
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
     min-height: 100vh;
     position: relative;
+  }
+
+  :where(.glass-surface, .glass-strong, .glass-inner, .glass-lite, .glass-pill, .glass-orb) {
+    color: color-mix(in oklch, var(--foreground) 96%, black 4%);
+  }
+
+  :where(.glass-surface, .glass-strong, .glass-inner, .glass-lite, .glass-pill, .glass-orb)
+    :where(.text-muted-foreground, .text-foreground\/75, .text-foreground\/70, .text-muted-foreground\/40) {
+    color: color-mix(in oklch, var(--foreground) 66%, transparent);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: color-mix(in oklch, var(--foreground) 46%, transparent);
+    opacity: 1;
   }
 }
 
@@ -116,11 +135,11 @@
         color-mix(in oklch, transparent 100%, white 0%) 32%,
         color-mix(in oklch, white 5%, transparent) 100%
       ),
-      color-mix(in oklch, var(--card) 34%, transparent);
-    border: 1px solid color-mix(in oklch, var(--border) 72%, white 25%);
+      color-mix(in oklch, var(--card) 68%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 88%, white 22%);
     box-shadow:
-      0 14px 46px color-mix(in oklch, var(--foreground) 14%, transparent),
-      inset 0 1px 0 color-mix(in oklch, white 68%, transparent);
+      0 14px 46px color-mix(in oklch, var(--foreground) 16%, transparent),
+      inset 0 1px 0 color-mix(in oklch, white 72%, transparent);
     backdrop-filter: blur(16px) saturate(180%);
   }
 
@@ -132,7 +151,7 @@
         color-mix(in oklch, transparent 100%, white 0%) 32%,
         color-mix(in oklch, white 7%, transparent) 100%
       ),
-      color-mix(in oklch, var(--card) 26%, transparent);
+      color-mix(in oklch, var(--card) 72%, transparent);
     border: 1px solid color-mix(in oklch, var(--border) 95%, white 18%);
     box-shadow:
       0 14px 44px color-mix(in oklch, var(--foreground) 14%, transparent),
@@ -148,8 +167,8 @@
         color-mix(in oklch, transparent 100%, white 0%) 38%,
         color-mix(in oklch, white 4%, transparent) 100%
       ),
-      color-mix(in oklch, var(--card) 22%, transparent);
-    border: 1px solid color-mix(in oklch, var(--border) 60%, white 18%);
+      color-mix(in oklch, var(--card) 62%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 82%, white 18%);
     box-shadow:
       0 10px 30px color-mix(in oklch, var(--foreground) 9%, transparent),
       inset 0 1px 0 color-mix(in oklch, white 52%, transparent);
@@ -157,8 +176,8 @@
   }
 
   .glass-lite {
-    background: color-mix(in oklch, var(--card) 24%, transparent);
-    border: 1px solid color-mix(in oklch, var(--border) 58%, white 14%);
+    background: color-mix(in oklch, var(--card) 58%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 78%, white 14%);
     box-shadow:
       inset 0 1px 0 color-mix(in oklch, white 44%, transparent),
       0 4px 14px color-mix(in oklch, var(--foreground) 6%, transparent);
@@ -166,7 +185,7 @@
 
   .glass-pill {
     border-radius: 9999px;
-    background: color-mix(in oklch, var(--card) 75%, transparent);
+    background: color-mix(in oklch, var(--card) 88%, transparent);
     border: 1px solid color-mix(in oklch, var(--border) 92%, white 15%);
     box-shadow:
       inset 0 1px 0 color-mix(in oklch, white 58%, transparent),

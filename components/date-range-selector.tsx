@@ -49,7 +49,7 @@ export default function DateRangeSelector({
       <div className="flex items-center gap-1.5">
         <Label
           htmlFor="start-date"
-          className="text-[10px] uppercase tracking-wider text-muted-foreground whitespace-nowrap"
+          className="text-[11px] uppercase tracking-wider text-muted-foreground whitespace-nowrap"
         >
           From
         </Label>
@@ -65,7 +65,7 @@ export default function DateRangeSelector({
       <div className="flex items-center gap-1.5">
         <Label
           htmlFor="end-date"
-          className="text-[10px] uppercase tracking-wider text-muted-foreground whitespace-nowrap"
+          className="text-[11px] uppercase tracking-wider text-muted-foreground whitespace-nowrap"
         >
           To
         </Label>

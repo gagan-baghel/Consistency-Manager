@@ -11,7 +11,7 @@ const UserSchema = new Schema<IUser>({
         type: String,
         required: true,
         unique: true,
-        enum: ['Pal', 'gagan'],
+        enum: ['Lucky', 'gagan'],
     },
     name: {
         type: String,

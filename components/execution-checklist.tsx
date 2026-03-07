@@ -16,7 +16,7 @@ export default function ExecutionChecklist({ sprint, onToggleExecution }: Execut
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Execution Tracker</h3>
+        <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Execution Tracker</h3>
         <span className="text-xs font-medium text-muted-foreground">{executedCount}/15 days executed</span>
       </div>
 
@@ -35,7 +35,7 @@ export default function ExecutionChecklist({ sprint, onToggleExecution }: Execut
                   : "glass-lite border-border hover:border-primary/30"
                 }`}
             >
-              <span className="text-[10px] font-bold text-muted-foreground mb-1.5">D{day.dayNumber}</span>
+              <span className="text-[11px] font-bold text-muted-foreground mb-1.5">D{day.dayNumber}</span>
               <Checkbox
                 id={`exec-${index}`}
                 checked={isExecuted}

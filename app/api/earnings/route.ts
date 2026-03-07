@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Earnings from '@/lib/models/Earnings'
 
-const VALID_USERS = ['Pal', 'gagan'] as const
+const VALID_USERS = ['Lucky', 'gagan'] as const
 
 function isValidUserId(userId: string | null): userId is (typeof VALID_USERS)[number] {
     return !!userId && VALID_USERS.includes(userId as (typeof VALID_USERS)[number])

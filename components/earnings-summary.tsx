@@ -72,11 +72,11 @@ export default function EarningsSummary({ weeks, earnings }: EarningsSummaryProp
       {totalEarnings > 0 && (
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Avg / Week</div>
+            <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Avg / Week</div>
             <div className="text-2xl font-bold tabular-nums tracking-tight">{formatCurrency(averageWeekly)}</div>
           </div>
           <div className="space-y-1.5">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Coverage</div>
+            <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Coverage</div>
             <div className="text-2xl font-bold tabular-nums tracking-tight">
               {weeksWithEarnings}/{weeks.length}
             </div>
@@ -86,7 +86,7 @@ export default function EarningsSummary({ weeks, earnings }: EarningsSummaryProp
 
       {monthlyBreakdown.length > 1 && totalEarnings > 0 && (
         <div className="space-y-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">By Month</h3>
+          <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">By Month</h3>
           <div className="space-y-2">
             {monthlyBreakdown.map((month) => (
               <div
@@ -96,9 +96,9 @@ export default function EarningsSummary({ weeks, earnings }: EarningsSummaryProp
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-medium">{month.month}</span>
                   {month.year !== new Date().getFullYear() && (
-                    <span className="text-[10px] text-muted-foreground">{month.year}</span>
+                    <span className="text-[11px] text-muted-foreground">{month.year}</span>
                   )}
-                  <span className="text-[10px] text-muted-foreground">• {month.weekCount}w</span>
+                  <span className="text-[11px] text-muted-foreground">• {month.weekCount}w</span>
                 </div>
                 <span className="text-lg font-semibold tabular-nums tracking-tight">{formatCurrency(month.total)}</span>
               </div>

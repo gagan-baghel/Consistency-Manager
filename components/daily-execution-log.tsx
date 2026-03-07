@@ -124,7 +124,7 @@ export default function DailyExecutionLog({ sprint, onUpdateLog }: DailyExecutio
                       Cancel
                     </button>
                   </div>
-                  <div className="text-[10px] text-muted-foreground text-right">{tempLog.length}/100</div>
+                  <div className="text-[11px] text-muted-foreground text-right">{tempLog.length}/100</div>
                 </div>
               )}
             </div>

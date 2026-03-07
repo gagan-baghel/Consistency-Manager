@@ -15,7 +15,7 @@ const EarningsSchema = new Schema<IEarnings>(
         userId: {
             type: String,
             required: true,
-            enum: ['Pal', 'gagan'],
+            enum: ['Lucky', 'gagan'],
             index: true,
         },
         weekId: {

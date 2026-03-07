@@ -74,7 +74,9 @@ export default function SprintHistoryView({ sprints }: SprintHistoryViewProps) {
           const executionCount = getExecutionCount(sprint.executionChecklist)
 
           const isSuccess = sprint.completionStatus === "completed"
-          const isFailed = sprint.completionStatus === "failed"
+          const isEndedEarly = !!sprint.endedEarly
+          const isFailed = sprint.completionStatus === "failed" && !isEndedEarly
+          const isPositiveStatus = isSuccess || isEndedEarly
 
           return (
             <div
@@ -89,14 +91,14 @@ export default function SprintHistoryView({ sprints }: SprintHistoryViewProps) {
               >
                 <div className="flex items-start gap-3">
                   <div
-                    className={`mt-0.5 w-5 h-5 rounded-sm flex items-center justify-center flex-shrink-0 ${isSuccess
+                    className={`mt-0.5 w-5 h-5 rounded-sm flex items-center justify-center flex-shrink-0 ${isPositiveStatus
                       ? "bg-primary text-primary-foreground"
                       : isFailed
                         ? "bg-destructive text-destructive-foreground"
                         : "bg-muted border border-border"
                       }`}
                   >
-                    {isSuccess && (
+                    {isPositiveStatus && (
                       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                         <title>Checkmark</title>
                         <path
@@ -123,17 +125,11 @@ export default function SprintHistoryView({ sprints }: SprintHistoryViewProps) {
                     </p>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground mb-2">
                       <span
-                        className={`font-semibold uppercase tracking-wider ${isSuccess ? "text-primary" : isFailed ? "text-destructive" : ""
+                        className={`font-semibold uppercase tracking-wider ${isPositiveStatus ? "text-primary" : isFailed ? "text-destructive" : ""
                           }`}
                       >
-                        {isSuccess ? "Achieved" : isFailed ? "Not Completed" : "Unknown"}
+                        {isEndedEarly ? "Ended Early" : isSuccess ? "Achieved" : isFailed ? "Not Completed" : "Unknown"}
                       </span>
-                      {sprint.endedEarly && (
-                        <>
-                          <span>•</span>
-                          <span className="text-orange-600 font-medium">Ended Early</span>
-                        </>
-                      )}
                     </div>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                       <span>

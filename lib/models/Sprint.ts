@@ -41,7 +41,7 @@ const SprintSchema = new Schema<ISprint>(
         userId: {
             type: String,
             required: true,
-            enum: ['Pal', 'gagan'],
+            enum: ['Lucky', 'gagan'],
             index: true,
         },
         sprintId: {

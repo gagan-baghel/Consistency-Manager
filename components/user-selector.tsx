@@ -11,8 +11,8 @@ export default function UserSelector() {
         return null
     }
 
-    const otherUserId: UserId = currentUser.userId === 'Pal' ? 'gagan' : 'Pal'
-    const otherUserName = otherUserId === 'Pal' ? 'Pal' : 'Gagan'
+    const otherUserId: UserId = currentUser.userId === 'Lucky' ? 'gagan' : 'Lucky'
+    const otherUserName = otherUserId === 'Lucky' ? 'Lucky' : 'Gagan'
 
     return (
         <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3">

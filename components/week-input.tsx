@@ -62,7 +62,7 @@ export default function WeekInput({ week, value, onChange, isCurrent = false }: 
         <div className="text-xs font-semibold text-foreground">
           Week {week.weekNumber}
         </div>
-        <div className="text-[10px] leading-tight mt-0.5 text-foreground/75">
+        <div className="text-[11px] leading-tight mt-0.5 text-foreground/75">
           {week.label}
         </div>
       </div>

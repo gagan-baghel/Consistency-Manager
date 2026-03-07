@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
-export type UserId = 'Pal' | 'gagan'
+export type UserId = 'Lucky' | 'gagan'
 
 interface User {
     userId: UserId
@@ -18,14 +18,14 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined)
 
 const USERS: Record<UserId, User> = {
-    Pal: { userId: 'Pal', name: 'Pal' },
+    Lucky: { userId: 'Lucky', name: 'Lucky' },
     gagan: { userId: 'gagan', name: 'Gagan' },
 }
 
 const STORAGE_KEY = 'earnings-tracker-user'
 
 export function UserProvider({ children }: { children: ReactNode }) {
-    const [currentUser, setCurrentUser] = useState<User>(USERS.Pal)
+    const [currentUser, setCurrentUser] = useState<User>(USERS.Lucky)
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {

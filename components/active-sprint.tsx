@@ -119,7 +119,7 @@ export default function ActiveSprint({
       {!sprint.completed && sprint.completionStatus === "in-progress" && (
         <div className="glass-surface glass-highlight rounded-2xl overflow-hidden">
           <div className="p-4 md:p-6 text-center">
-            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-4">
+            <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-4">
               {timeRemaining.isExpired ? "Time Expired" : "Sprint Remaining"}
             </div>
             <div className={`flex items-center justify-center gap-4 md:gap-8 ${getUrgencyColor()} font-mono`}>
@@ -127,21 +127,21 @@ export default function ActiveSprint({
                 <div className="text-3xl md:text-5xl font-bold tabular-nums tracking-tighter">
                   {formatTimeUnit(timeRemaining.days)}
                 </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-2">Days</div>
+                <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mt-2">Days</div>
               </div>
               <div className="text-2xl md:text-4xl font-bold opacity-30 mt-[-10px]">:</div>
               <div className="flex flex-col items-center">
                 <div className="text-3xl md:text-5xl font-bold tabular-nums tracking-tighter">
                   {formatTimeUnit(timeRemaining.hours)}
                 </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-2">Hrs</div>
+                <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mt-2">Hrs</div>
               </div>
               <div className="text-2xl md:text-4xl font-bold opacity-30 mt-[-10px]">:</div>
               <div className="flex flex-col items-center">
                 <div className="text-3xl md:text-5xl font-bold tabular-nums tracking-tighter">
                   {formatTimeUnit(timeRemaining.minutes)}
                 </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-2">Min</div>
+                <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mt-2">Min</div>
               </div>
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function ActiveSprint({
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="flex justify-between items-center mt-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="flex justify-between items-center mt-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
               <span>Start: {new Date(sprint.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
               <span className="text-foreground">{Math.round(progress)}% Progress</span>
               <span>End: {new Date(sprint.endDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
@@ -165,7 +165,7 @@ export default function ActiveSprint({
 
       {sprint.completionStatus === "in-progress" && (
         <div className="glass-surface glass-highlight rounded-2xl p-4 md:p-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">
             Daily Focus
           </p>
           <div className="grid gap-2 text-sm">
@@ -214,7 +214,7 @@ export default function ActiveSprint({
 
       {sprint.secondaryGoals.length > 0 && (
         <div className="space-y-4 pt-2">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
             Secondary Objectives
           </h3>
           <div className="grid gap-3">

@@ -266,11 +266,16 @@ export default function EarningsTracker() {
 
   const handleResetSprint = async () => {
     if (activeSprint) {
+      const now = new Date()
+      const isEarlyTermination = now < new Date(activeSprint.endDate)
+
       const finalSprint: Sprint = {
         ...activeSprint,
         completionStatus: activeSprint.completed ? "completed" : "failed",
         status: "terminated",
         outcome: activeSprint.completed ? "achieved" : "failed",
+        completedAt: activeSprint.completedAt ?? now,
+        endedEarly: isEarlyTermination,
       }
 
       // Persist the terminated sprint

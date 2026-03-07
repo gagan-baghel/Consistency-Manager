@@ -17,18 +17,44 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://earnings-tracker.gaganbaghel.com'),
   title: 'Earnings & Sprints Tracker',
-  description: 'Track weekly earnings and 15-day sprints',
+  description: 'Track your weekly earnings and execute focused 15-day sprints to achieve peak productivity and financial goals.',
   generator: 'v0.app',
+  keywords: ['productivity', 'earnings tracker', 'sprint planner', 'goal setting', 'finance tracker'],
+  authors: [{ name: 'Gagan Baghel', url: 'https://gaganbaghel.com' }],
+  openGraph: {
+    title: 'Earnings & Sprints Tracker',
+    description: 'Track your weekly earnings and execute focused 15-day sprints to achieve peak productivity and financial goals.',
+    url: 'https://earnings-tracker.gaganbaghel.com',
+    siteName: 'Earnings & Sprints Tracker',
+    images: [
+      {
+        url: '/appScreenshot.png',
+        width: 1200,
+        height: 630,
+        alt: 'Earnings and Sprints Tracker Preview',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Earnings & Sprints Tracker',
+    description: 'Track your weekly earnings and execute focused 15-day sprints to achieve peak productivity and financial goals.',
+    creator: '@gagan_baghel',
+    images: ['/appScreenshot.png'],
+  },
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
+        url: '/icon.png',
+        type: 'image/png',
       },
       {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
+        url: '/favicon.ico',
+        type: 'image/x-icon',
       },
       {
         url: '/icon.svg',
